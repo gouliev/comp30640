@@ -1,0 +1,67 @@
+#!/bin/bash
+
+if [ "$#" -ne 1 ]
+then
+        echo "Error: no parameter"
+        exit 1
+fi
+
+#Creating pipe variables wikipedia named pipes
+server_pipe=/tmp/server.pipe
+client_pipe=/tmp/$1.pipe
+
+trap ctrl_c INT
+#Function for ctrl_c with message we are cleaning pipes
+function ctrl_c() {
+	echo "Cleaning pipes..."
+	rm -f $client_pipe
+	exit 0
+}
+
+
+if [[ ! -p $client_pipe ]];then
+        mkfifo $client_pipe
+else
+	echo "Client already exists"
+	echo "Exiting..."
+	exit 1
+fi
+
+
+if [[ ! -p $server_pipe ]];then
+	echo "Server is down"
+	exit 1
+fi
+#Similar to our server.sh
+while true; do
+read -p "" command
+IFS=' ' read -r -a command_list <<< $command
+
+case "${command_list[0]}" in
+        create_database)
+		echo "${command_list[0]}" "$1" "${command_list[1]}"
+		#This is where we use pipe
+		echo $command >$server_pipe
+                ;;
+        create_table)
+ 		 echo "${command_list[0]}" "$1" "${command_list[1]}"  "${command_list[2]}" "${command_list[3]}"
+                echo $command >$server_pipe
+                ;;
+        insert)
+		echo "${command_list[0]}" "$1" "${command_list[1]}"  "${command_list[2]}" "${command_list[3]}"
+		echo $command >$server_pipe
+		;;
+	select)
+		echo "${command_list[0]}" "$1" "${command_list[1]}"  "${command_list[2]}" "${command_list[3]}"
+		echo $command >$server_pipe
+                ;;
+        exit)
+		echo "${command_list[0]}" "$1"
+                echo "Client $1 Exiting..."
+		ctrl_c
+                ;;
+        *)
+                echo "Error: bad request"
+                exit 1
+esac
+done

@@ -1,0 +1,29 @@
+#!/bin/bash
+
+
+while true; do
+read -p "" command
+IFS=',' read -r -a command_array <<< command
+case "${command_array[1]}" in
+	create_database)
+		./create_database.sh "${command_array[2]}"
+		;;
+	create_table)
+		./create_table.sh ${command_array[1]} ${command_array[1]} ${command_array[1]}
+		;;
+	insert)
+		./insert.sh "$2" "$3" "$4"
+		;;
+	select)
+		./select.sh "$2" "$3" "$4"
+		;;
+	shutdown)
+		echo "Sutting down..."
+		exit 0
+		;;
+	*)
+		echo "Error: bad request"
+		exit 1
+esac
+done
+

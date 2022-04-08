@@ -1,0 +1,38 @@
+#!/bin/bash
+if [ "$#" -lt 3 ] || [ "$#" -gt 3 ];
+then
+        echo "Error: parameters problem"
+        exit 1
+fi
+
+if [ ! -d "$1" ]; then
+        echo "Error: DB does not exist"
+        exit 1
+fi
+
+FILE="./$1/$2"
+if [ ! -f "$FILE" ]; then
+
+        echo "Error: table does not exist"
+        exit 1
+
+else
+	echo "Here"
+	head=$(head -n 1 $FILE)
+	commas="${head//[^,]}"
+	number_commas="{#commas}"
+
+	commas_third_argument="${3//[^,]}"
+	number_commas_third_argument="{#commas_third_argument}"
+
+	if [ $number_commas -ne $number_commas_third_argument ]
+		echo "Error: number of columns in tuple does not match schema"
+		exit 1
+	else
+		echo "$3" >> $FILE
+		echo "OK: tuple inserted"
+	fi
+fi
+
+exit 0
+
