@@ -1,4 +1,8 @@
 # Database Management System Using BASH Scripting
+
+![image](https://user-images.githubusercontent.com/91686296/230939644-a5a24718-2698-4d7b-a7e7-919ea1d08e3e.png)
+![Banner](https://user-images.githubusercontent.com/91686296/230939416-bae6f891-bfe1-4285-83d9-41647b381784.png)
+
 This is a project I made after finishing the `Linux` and the `Bash` command language courses in the ITI.
 It is a menu based simulation of Database Management Systems and how they work.
 - Each database is represented by a directory.
